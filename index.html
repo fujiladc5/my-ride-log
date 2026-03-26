@@ -7,32 +7,22 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>MY RIDE LOG</title>
     <style>
-        /* スマホでタップした時の青い枠を消す & 基本フォント */
         * { -webkit-tap-highlight-color: transparent; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; text-align: center; padding: 15px; background-color: #121212; color: #e0e0e0; margin: 0; padding-bottom: 100px; }
-        
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; text-align: center; background-color: #121212; color: #e0e0e0; margin: 0; padding: 15px; padding-bottom: 100px; }
         .lang-switch { position: fixed; top: 15px; right: 15px; background: #333; color: #fff; border: 1px solid #444; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 11px; font-weight: bold; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         h1 { font-size: 1.4rem; color: #ffffff; margin-top: 10px; margin-bottom: 10px; letter-spacing: 0.15em; font-weight: 800; text-transform: uppercase; border-bottom: 3px solid #007aff; display: inline-block; padding-bottom: 5px; }
-        #vehicleName { background: transparent; border: none; border-bottom: 1px solid #444; color: #007aff; text-align: center; font-size: 1.1rem; width: 80%; max-width: 300px; padding: 8px; margin-bottom: 25px; outline: none; border-radius: 0; }
-        
+        #vehicleName { background: transparent; border: none; border-bottom: 1px solid #444; color: #007aff; text-align: center; font-size: 1.1rem; width: 80%; max-width: 300px; padding: 8px; margin-bottom: 25px; outline: none; }
         .card { background: #1e1e1e; padding: 20px; border-radius: 16px; max-width: 480px; margin: 0 auto 20px; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: left; }
         h2 { font-size: 0.85rem; color: #007aff; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 15px; margin-top: 0; display: flex; align-items: center; }
         h2::before { content: ""; display: inline-block; width: 3px; height: 14px; background: #007aff; margin-right: 10px; }
-        
-        label { font-size: 0.7rem; color: #888; margin-bottom: 4px; display: block; font-weight: 600; }
-        /* inputのフォントサイズを16px以上にすることで、iPhoneのフォーカス時ズームを防止 */
-        input, select { padding: 12px; font-size: 16px; width: 100%; margin-bottom: 12px; border: 1px solid #333; border-radius: 10px; box-sizing: border-box; background: #252525; color: #fff; outline: none; appearance: none; }
-        
-        .calc-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 5px; }
+        label { font-size: 0.65rem; color: #888; margin-bottom: 4px; display: block; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        input, select { padding: 12px 8px; font-size: 16px; width: 100%; margin-bottom: 12px; border: 1px solid #333; border-radius: 10px; box-sizing: border-box; background: #252525; color: #fff; outline: none; appearance: none; }
+        .calc-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 5px; }
         .setup-label { color: #007aff; font-size: 0.8rem; font-weight: bold; margin: 12px 0 8px; display: block; border-left: 3px solid #007aff; padding-left: 10px; }
-        
         .result-box { background: #121212; padding: 15px; border-radius: 12px; border-left: 5px solid #ff9500; margin-top: 15px; }
         .res-text { font-size: 1rem; line-height: 1.6; color: #fff; font-weight: bold; }
         .res-sub { font-size: 0.8rem; color: #888; margin-top: 8px; }
-
-        .save-btn { padding: 16px; font-size: 15px; background: #007aff; color: white; border: none; border-radius: 12px; cursor: pointer; width: 100%; font-weight: bold; text-transform: uppercase; box-shadow: 0 4px 15px rgba(0,122,255,0.3); transition: transform 0.1s; }
-        .save-btn:active { transform: scale(0.98); }
-
+        .save-btn { padding: 16px; font-size: 15px; background: #007aff; color: white; border: none; border-radius: 12px; cursor: pointer; width: 100%; font-weight: bold; text-transform: uppercase; }
         .log-list { margin-top: 20px; padding: 0; list-style: none; border-top: 1px solid #333; }
         .log-item { padding: 15px 0; border-bottom: 1px solid #252525; display: flex; align-items: center; gap: 12px; }
         .thumb { width: 65px; height: 65px; object-fit: cover; border-radius: 10px; background: #2a2a2a; flex-shrink: 0; }
@@ -41,40 +31,38 @@
         .log-sub { display: flex; justify-content: space-between; font-size: 0.75rem; color: #888; }
         .btn-delete { background: #333; color: #777; border: none; width: 36px; height: 36px; border-radius: 10px; cursor: pointer; font-size: 18px; }
         .tag { background: #252525; padding: 2px 6px; border-radius: 4px; font-size: 0.65rem; color: #007aff; margin-right: 5px; font-weight: bold; border: 1px solid #333; }
-        
         #photoModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; }
-        #photoModal img { max-width: 95%; max-height: 80%; border-radius: 12px; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
+        #photoModal img { max-width: 95%; max-height: 80%; border-radius: 12px; }
     </style>
 </head>
 <body>
-
     <button class="lang-switch" onclick="toggleLanguage()">EN / JP</button>
     <h1>MY RIDE LOG</h1>
     <input type="text" id="vehicleName" placeholder="車種名..." oninput="saveVehicleName()">
 
     <div class="card">
-        <h2 id="h2-offset">ホイール＆タイヤ計算</h2>
+        <h2 id="h2-offset">ﾎｲｰﾙ＆ﾀｲﾔ計算</h2>
         <span class="setup-label" id="lbl-current">現在の仕様</span>
         <div class="calc-row">
-            <div><label id="lbl-rim1">リム幅(J)</label><select id="curJ" onchange="calcAll()"></select></div>
-            <div><label id="lbl-off1">オフセット</label><input type="number" id="curOff" value="45" oninput="calcAll()"></div>
+            <div><label id="lbl-rim1">ﾘﾑ幅(J)</label><select id="curJ" onchange="calcAll()"></select></div>
+            <div><label id="lbl-off1">ｵﾌｾｯﾄ</label><input type="number" id="curOff" value="45" oninput="calcAll()"></div>
             <div><label id="lbl-spc1">ｽﾍﾟｰｻｰ</label><input type="number" id="curSpc" value="0" oninput="calcAll()"></div>
         </div>
         <div class="calc-row">
-            <div><label id="lbl-tw1">タイヤ幅</label><select id="curTW" onchange="calcAll()"></select></div>
+            <div><label id="lbl-tw1">ﾀｲﾔ幅</label><select id="curTW" onchange="calcAll()"></select></div>
             <div><label id="lbl-tr1">扁平率(%)</label><input type="number" id="curTR" value="45" oninput="calcAll()"></div>
-            <div><label id="lbl-ti1">インチ</label><input type="number" id="curTI" value="18" oninput="calcAll()"></div>
+            <div><label id="lbl-ti1">ｲﾝﾁ</label><input type="number" id="curTI" value="18" oninput="calcAll()"></div>
         </div>
         <span class="setup-label" id="lbl-new">変更後の仕様</span>
         <div class="calc-row">
-            <div><label id="lbl-rim2">リム幅(J)</label><select id="newJ" onchange="calcAll()"></select></div>
-            <div><label id="lbl-off2">オフセット</label><input type="number" id="newOff" value="35" oninput="calcAll()"></div>
+            <div><label id="lbl-rim2">ﾘﾑ幅(J)</label><select id="newJ" onchange="calcAll()"></select></div>
+            <div><label id="lbl-off2">ｵﾌｾｯﾄ</label><input type="number" id="newOff" value="35" oninput="calcAll()"></div>
             <div><label id="lbl-spc2">ｽﾍﾟｰｻｰ</label><input type="number" id="newSpc" value="0" oninput="calcAll()"></div>
         </div>
         <div class="calc-row">
-            <div><label id="lbl-tw2">タイヤ幅</label><select id="newTW" onchange="calcAll()"></select></div>
+            <div><label id="lbl-tw2">ﾀｲﾔ幅</label><select id="newTW" onchange="calcAll()"></select></div>
             <div><label id="lbl-tr2">扁平率(%)</label><input type="number" id="newTR" value="40" oninput="calcAll()"></div>
-            <div><label id="lbl-ti2">インチ</label><input type="number" id="newTI" value="18" oninput="calcAll()"></div>
+            <div><label id="lbl-ti2">ｲﾝﾁ</label><input type="number" id="newTI" value="18" oninput="calcAll()"></div>
         </div>
         <div class="result-box">
             <div class="res-text" id="res-desc"></div>
@@ -117,71 +105,46 @@
     <div id="photoModal" onclick="this.style.display='none'"><img id="modalImg" src=""></div>
 
     <script>
-        // --- 昨日のロジックを完全継承 ---
         const i18n = {
-            en: { 
-                vP: "Enter Vehicle...", off: "Wheel & Tire Calculator", cur: "Current Setup", new: "New Setup", spc: "Spacer(mm)",
-                rim: "Rim Width(J)", offset: "Offset", tw: "Tire Width", tr: "Ratio(%)", ti: "Wheel(in)",
-                t1: "Wheel face moves", t2: "outwards", t3: "inwards", t4: "poking out", t5: "tucking in",
-                t9: "Diameter:", oil: "Oil Service", oM: "Mileage (km)", oV: "Viscosity", oB: "Save Record",
-                fuel: "Fuel Log", fD: "Distance (km)", fF: "Fuel (L)", fB: "Calculate",
-                ser: "Service History", sD: "Date", sW: "Work Performed", sP: "Photo", sB: "Add History",
-                conf: "Delete?", next: "Next"
-            },
-            jp: { 
-                vP: "車種名を入力...", off: "ホイール＆タイヤ計算", cur: "現在の仕様", new: "変更後の仕様", spc: "ｽﾍﾟｰｻｰ(mm)",
-                rim: "リム幅(J)", offset: "オフセット", tw: "タイヤ幅", tr: "扁平率(%)", ti: "インチ",
-                t1: "ホイール面は今より", t2: "外側に", t3: "内側に", t4: "出っ張ります", t5: "引っ込みます",
-                t9: "タイヤ外径：", oil: "オイル交換", oM: "現在の距離 (km)", oV: "オイル粘度", oB: "記録を保存",
-                fuel: "燃費計算", fD: "走行距離 (km)", fF: "給油量 (L)", fB: "計算・保存",
-                ser: "整備記録", sD: "日付", sW: "作業内容", sP: "写真", sB: "記録を保存",
-                conf: "削除しますか？", next: "次回"
-            }
+            en: { vP: "Vehicle Name...", off: "Wheel/Tire Calc", cur: "Current", new: "New", spc: "Spacer", rim: "Rim(J)", offset: "Offset", tw: "Tire W", tr: "Ratio", ti: "Inch", t1: "Face moves", t2: "outwards", t3: "inwards", t4: "poking out", t5: "tucking in", t9: "Diameter:", oil: "Oil Service", oM: "Mileage(km)", oV: "Viscosity", oB: "Save", fuel: "Fuel Log", fD: "Dist.(km)", fF: "Fuel(L)", fB: "Calc & Save", ser: "Service Log", sD: "Date", sW: "Work", sP: "Photo", sB: "Save", conf: "Delete?", next: "Next" },
+            jp: { vP: "車種名を入力...", off: "ﾎｲｰﾙ＆ﾀｲﾔ計算", cur: "現在の仕様", new: "変更後の仕様", spc: "ｽﾍﾟｰｻｰ", rim: "ﾘﾑ幅(J)", offset: "ｵﾌｾｯﾄ", tw: "ﾀｲﾔ幅", tr: "扁平率(%)", ti: "ｲﾝﾁ", t1: "ホイール面は今より", t2: "外側に", t3: "内側に", t4: "出っ張ります", t5: "引っ込みます", t9: "タイヤ外径：", oil: "オイル交換", oM: "現在の距離 (km)", oV: "オイル粘度", oB: "記録を保存", fuel: "燃費計算", fD: "走行距離 (km)", fF: "給油量 (L)", fB: "計算・保存", ser: "整備記録", sD: "日付", sW: "作業内容", sP: "写真", sB: "記録を保存", conf: "削除しますか？", next: "次回" }
         };
 
         let currentLang = 'jp';
-        const KEYS = { OIL: 'myride_oil_v21', FUEL: 'myride_fuel_v21', EVENT: 'myride_event_v21', NAME: 'myride_vname_v21' };
+        const KEYS = { OIL: 'myride_oil_v22', FUEL: 'myride_fuel_v22', EVENT: 'myride_event_v22', NAME: 'myride_vname_v22' };
 
         function initSelects() {
-            const rimIds = ['curJ', 'newJ'];
-            rimIds.forEach(id => {
+            ['curJ', 'newJ'].forEach(id => {
                 const el = document.getElementById(id);
                 for (let j = 5.0; j <= 12.0; j += 0.5) {
                     const opt = document.createElement('option');
                     opt.value = j; opt.text = j.toFixed(1) + " J";
-                    if (id === 'curJ' && j === 8.0) opt.selected = true;
-                    if (id === 'newJ' && j === 9.0) opt.selected = true;
+                    if ((id==='curJ' && j===8.0) || (id==='newJ' && j===9.0)) opt.selected = true;
                     el.add(opt);
                 }
             });
-            const tireIds = ['curTW', 'newTW'];
-            tireIds.forEach(id => {
+            ['curTW', 'newTW'].forEach(id => {
                 const el = document.getElementById(id);
                 for (let w = 145; w <= 335; w += 10) {
                     const opt = document.createElement('option');
                     opt.value = w; opt.text = w + " mm";
-                    if (id === 'curTW' && w === 225) opt.selected = true;
-                    if (id === 'newTW' && w === 245) opt.selected = true;
+                    if ((id==='curTW' && w===225) || (id==='newTW' && w===245)) opt.selected = true;
                     el.add(opt);
                 }
             });
         }
 
         function toggleLanguage() { currentLang = (currentLang === 'en') ? 'jp' : 'en'; updateUI(); }
-
         function updateUI() {
             const t = i18n[currentLang];
             document.getElementById('vehicleName').placeholder = t.vP;
             document.getElementById('h2-offset').innerText = t.off;
             document.getElementById('lbl-current').innerText = t.cur;
             document.getElementById('lbl-new').innerText = t.new;
-            
-            const fields = ['rim', 'off', 'spc', 'tw', 'tr', 'ti'];
-            fields.forEach(f => {
+            ['rim', 'off', 'spc', 'tw', 'tr', 'ti'].forEach(f => {
                 document.getElementById(`lbl-${f}1`).innerText = t[f];
                 document.getElementById(`lbl-${f}2`).innerText = t[f];
             });
-
             document.getElementById('h2-oil').innerText = t.oil;
             document.getElementById('lbl-oil-m').innerText = t.oM;
             document.getElementById('lbl-oil-v').innerText = t.oV;
@@ -195,7 +158,6 @@
             document.getElementById('lbl-s-w').innerText = t.sW;
             document.getElementById('lbl-s-p').innerText = t.sP;
             document.getElementById('btn-service-save').innerText = t.sB;
-            
             calcAll(); showOilLogs(); showFuelLogs(); showLogs();
         }
 
@@ -207,9 +169,7 @@
             const outer = ((newJ - curJ) * 25.4 / 2) - ((newOff - newSpc) - (curOff - curSpc));
             const curDia = (getV('curTW') * getV('curTR') / 100 * 2) + (getV('curTI') * 25.4);
             const newDia = (getV('newTW') * getV('newTR') / 100 * 2) + (getV('newTI') * 25.4);
-            const outDir = outer >= 0 ? t.t2 : t.t3;
-            const outAction = outer >= 0 ? t.t4 : t.t5;
-            document.getElementById('res-desc').innerHTML = `${t.t1} <span style="color:#ff9500;">${Math.abs(outer).toFixed(1)}mm ${outDir}${outAction}</span>`;
+            document.getElementById('res-desc').innerHTML = `${t.t1} <span style="color:#ff9500;">${Math.abs(outer).toFixed(1)}mm ${outer >= 0 ? t.t2 : t.t3}${outer >= 0 ? t.t4 : t.t5}</span>`;
             document.getElementById('res-tire').innerHTML = `${t.t9} ${curDia.toFixed(1)}mm → ${newDia.toFixed(1)}mm`;
         }
 
@@ -223,10 +183,7 @@
         }
         function showOilLogs() {
             const logs = JSON.parse(localStorage.getItem(KEYS.OIL)) || [];
-            document.getElementById('oilLogList').innerHTML = logs.map((log, i) => `
-                <li class="log-item"><div class="log-content"><div class="log-main"><span>${log.current.toLocaleString()} km</span><span>${i18n[currentLang].next}: ${log.next.toLocaleString()}</span></div>
-                <div class="log-sub"><span><span class="tag">OIL</span>${log.type}</span><span>${log.date}</span></div></div>
-                <button class="btn-delete" onclick="deleteItem('${KEYS.OIL}', ${i}, 'showOilLogs')">×</button></li>`).join('');
+            document.getElementById('oilLogList').innerHTML = logs.map((log, i) => `<li class="log-item"><div class="log-content"><div class="log-main"><span>${log.current.toLocaleString()} km</span><span>${i18n[currentLang].next}: ${log.next.toLocaleString()}</span></div><div class="log-sub"><span><span class="tag">OIL</span>${log.type}</span><span>${log.date}</span></div></div><button class="btn-delete" onclick="deleteItem('${KEYS.OIL}', ${i}, 'showOilLogs')">×</button></li>`).join('');
         }
         function calculateAndSaveFuel() {
             const d = Number(document.getElementById('tripDistance').value), f = Number(document.getElementById('fuelAmount').value);
@@ -251,10 +208,7 @@
         }
         function showLogs() {
             const logs = JSON.parse(localStorage.getItem(KEYS.EVENT)) || [];
-            document.getElementById('logList').innerHTML = logs.map((log, i) => `
-                <li class="log-item">${log.photo ? `<img src="${log.photo}" class="thumb" onclick="openModal('${log.photo}')">` : `<div class="thumb" style="display:flex;align-items:center;justify-content:center;font-size:24px;">🗒️</div>`}
-                <div class="log-content"><div class="log-main"><span>${log.title}</span></div><div class="log-sub"><span>${log.date}</span></div></div>
-                <button class="btn-delete" onclick="deleteItem('${KEYS.EVENT}', ${i}, 'showLogs')">×</button></li>`).join('');
+            document.getElementById('logList').innerHTML = logs.map((log, i) => `<li class="log-item">${log.photo ? `<img src="${log.photo}" class="thumb" onclick="openModal('${log.photo}')">` : `<div class="thumb" style="display:flex;align-items:center;justify-content:center;font-size:24px;">🗒️</div>`}<div class="log-content"><div class="log-main"><span>${log.title}</span></div><div class="log-sub"><span>${log.date}</span></div></div><button class="btn-delete" onclick="deleteItem('${KEYS.EVENT}', ${i}, 'showLogs')">×</button></li>`).join('');
         }
         function openModal(src) { document.getElementById('modalImg').src = src; document.getElementById('photoModal').style.display = 'flex'; }
         const toBase64 = f => new Promise((res, rej) => { const r = new FileReader(); r.readAsDataURL(f); r.onload = () => res(r.result); r.onerror = e => rej(e); });
